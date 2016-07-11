@@ -1,0 +1,14 @@
+[package]
+
+name    = "no-dice"
+version = "0.1.0"
+authors = ["Jeremy Hull <sourdrums@gmail.com>"]
+
+[[bin]]
+
+name = "roll"
+
+[dependencies]
+
+nom  = "^1.0.0"
+rand = "^0.3.0"
