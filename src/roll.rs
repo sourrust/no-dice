@@ -1,7 +1,8 @@
 use rand;
 use rand::Rng;
+use rand::distributions::range::SampleRange;
 
-fn roll_range(low: i32, high: i32) -> i32 {
+fn roll_range<T: PartialOrd + SampleRange>(low: T, high: T) -> T {
   rand::thread_rng().gen_range(low, high)
 }
 
