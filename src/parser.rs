@@ -6,8 +6,9 @@ use nom::{
 
 use std::str;
 use std::str::FromStr;
+use std::collections::HashMap;
 
-use types::{DiceMutation, DiceSize, DiceRoll, Token, Modifier};
+use types::{DiceMutation, DiceValue, DiceSize, DiceRoll, Token, Modifier};
 
 macro_rules! satisfy {
   ($input: expr, $is_character: expr) => (
@@ -45,8 +46,8 @@ named!(size <&[u8], DiceSize>,
 
 named!(dice_mutator <&[u8], DiceMutation>,
   alt!(
-    preceded!(char!('d'), number) => { DiceMutation::Drop } |
-    preceded!(char!('k'), number) => { DiceMutation::Keep }
+    preceded!(char!('d'), number) => { DiceMutation::DropLowest } |
+    preceded!(char!('k'), number) => { DiceMutation::KeepHighest }
   )
 );
 
@@ -58,13 +59,37 @@ fn dice_roll_token(input: &[u8],
     dice_size: preceded!(char!('d'), size) ~
     mutators: many0!(dice_mutator),
     || {
-      let mut drop_dice = 0;
-      let mut keep_dice = 0;
+      let mut drop_dice = HashMap::with_capacity(2);
+      let mut keep_dice = HashMap::with_capacity(2);
+
+      drop_dice.insert(DiceValue::Lowest, 0);
+      drop_dice.insert(DiceValue::Highest, 0);
+
+      keep_dice.insert(DiceValue::Lowest, 0);
+      keep_dice.insert(DiceValue::Highest, 0);
 
       for mutator in mutators {
         match mutator {
-          DiceMutation::Drop(num) => drop_dice += num,
-          DiceMutation::Keep(num) => keep_dice += num,
+          DiceMutation::DropLowest(num)  => {
+            if let Some(lowest) = drop_dice.get_mut(&DiceValue::Lowest) {
+              *lowest += num;
+            }
+          }
+          DiceMutation::DropHighest(num) => {
+            if let Some(highest) = drop_dice.get_mut(&DiceValue::Highest) {
+              *highest += num;
+            }
+          }
+          DiceMutation::KeepLowest(num)  =>{
+            if let Some(lowest) = keep_dice.get_mut(&DiceValue::Lowest) {
+              *lowest += num;
+            }
+          }
+          DiceMutation::KeepHighest(num) => {
+            if let Some(highest) = keep_dice.get_mut(&DiceValue::Highest) {
+              *highest += num;
+            }
+          }
         }
       }
 

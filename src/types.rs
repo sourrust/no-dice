@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 #[derive(Debug, Clone)]
 pub enum DiceSize {
   Fate,
@@ -5,8 +7,16 @@ pub enum DiceSize {
 }
 
 pub enum DiceMutation {
-  Drop(u32),
-  Keep(u32),
+  DropLowest(u32),
+  DropHighest(u32),
+  KeepLowest(u32),
+  KeepHighest(u32),
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Hash)]
+pub enum DiceValue {
+  Highest,
+  Lowest,
 }
 
 #[derive(Debug, Clone)]
@@ -20,8 +30,8 @@ pub struct DiceRoll {
   pub is_negative: bool,
   pub count: usize,
   pub size: DiceSize,
-  pub keep: u32,
-  pub drop: u32,
+  pub keep: HashMap<DiceValue, u32>,
+  pub drop: HashMap<DiceValue, u32>,
 }
 
 #[derive(Debug, Clone)]
