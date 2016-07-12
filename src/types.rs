@@ -5,8 +5,16 @@ pub enum DiceSize {
 }
 
 pub enum DiceMutation {
-  Drop(u32),
-  Keep(u32),
+  DropLowest(u32),
+  DropHighest(u32),
+  KeepLowest(u32),
+  KeepHighest(u32),
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Hash)]
+pub enum DiceValue {
+  Highest,
+  Lowest,
 }
 
 #[derive(Debug, Clone)]
