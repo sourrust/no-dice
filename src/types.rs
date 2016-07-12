@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 #[derive(Debug, Clone)]
 pub enum DiceSize {
   Fate,
@@ -28,8 +30,8 @@ pub struct DiceRoll {
   pub is_negative: bool,
   pub count: usize,
   pub size: DiceSize,
-  pub keep: u32,
-  pub drop: u32,
+  pub keep: HashMap<DiceValue, u32>,
+  pub drop: HashMap<DiceValue, u32>,
 }
 
 #[derive(Debug, Clone)]
