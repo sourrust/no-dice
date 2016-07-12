@@ -45,8 +45,8 @@ named!(size <&[u8], DiceSize>,
 
 named!(dice_mutator <&[u8], DiceMutation>,
   alt!(
-    preceded!(char!('d'), number) => { DiceMutation::Drop } |
-    preceded!(char!('k'), number) => { DiceMutation::Keep }
+    preceded!(char!('d'), number) => { DiceMutation::DropLowest } |
+    preceded!(char!('k'), number) => { DiceMutation::KeepHighest }
   )
 );
 
