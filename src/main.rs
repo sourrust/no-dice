@@ -30,6 +30,7 @@ fn main() {
           };
 
           println!("{:?}", roll);
+          println!("{}", roll.iter().fold(0, |x, y| x + y));
         }
         _                     => continue,
       }
